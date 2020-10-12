@@ -211,12 +211,12 @@ public:
     }
 };
 
-CodingTree* createCode(Symbol** symbols, char* code){
+CodingTree* createCode(Symbol* symbols, char* code){
     PriorityQueue cola = *new PriorityQueue();
     for (int i =0; i>256; i++) {
-        if (symbols [i]->count !=0) {
-        char tempSymbol = symbols[i]->symbol;
-        int tempCount = symbols[i]->count;
+        if (symbols [i].count !=0) {
+        char tempSymbol = symbols[i].symbol;
+        int tempCount = symbols[i].count;
         CodingTree::BinaryNode binaryNode = CodingTree::BinaryNode(tempSymbol, tempCount);
         CodingTree::BinaryNode* ptrBinary =& binaryNode;
         cola.push(ptrBinary, tempCount);
@@ -230,14 +230,14 @@ CodingTree* createCode(Symbol** symbols, char* code){
     return cd;
 }
 
-char* encode(const char* str, unsigned int length, Symbol** symbols, unsigned int &lengthOutput){
+char* encode(const char* str, unsigned int length, Symbol* symbols, unsigned int &lengthOutput){
     for(int i = 0; i < 255; i++){
-        symbols[i]->count = 0;
+        symbols[i].count = 0;
     }
     for(int i = 0; i < length; i++){
         for(int j = 0; j < 255; j++){
-            if(symbols[j]->symbol == str[i]){
-                symbols[i]->count++;
+            if(symbols[j].symbol == str[i]){
+                symbols[i].count++;
             }
         }
     }
@@ -247,7 +247,7 @@ char* encode(const char* str, unsigned int length, Symbol** symbols, unsigned in
     codingTree = createCode(symbols, result);
     return result;
 }
-void decode(const char* encoded, unsigned int length, Symbol** symbols, char* str){
+void decode(const char* encoded, unsigned int length, Symbol* symbols, char* str){
     unsigned int read = 0, lengthOutput = 0;
     CodingTree* codingTree = new CodingTree();
     lengthOutput = codingTree->count();
@@ -261,15 +261,21 @@ void decode(const char* encoded, unsigned int length, Symbol** symbols, char* st
 int main(){
     unsigned int compressedLength = 0;
     Symbol* symbols = new Symbol[255];
-    for(int i = 0; i < 255; i++){
+    for(int i = 0; i <= 255; i++){
         symbols[i].symbol = i;
-        //std::cout << symbols[i].symbol;
+        //std::cout << i << symbols[i].symbol << std::endl;
     }
-    /*char t[] = "All the world's a stage, and all the men and women merely players.";
-    char* code = encode(t,67,symbols, compressedLength);
+    //std::cout << "punto 1" << std::endl;
+    char t[] = "All the world's a stage, and all the men and women merely players.";
+    //std::cout << "punto 2" << std::endl;
+    char* code = encode(t, 67, symbols, compressedLength);
+    std::cout << code << std::endl;
     char* res = new char[66];
+    //std::cout << "punto 3" << std::endl;
     decode(code, compressedLength, symbols, res);
-    delete[] res;*/
+    std::cout << res << std::endl;
+    delete[] res;
+    //std::cout << "punto final" << std::endl;
     char c;
     std::cin >> c;
     return 0;
