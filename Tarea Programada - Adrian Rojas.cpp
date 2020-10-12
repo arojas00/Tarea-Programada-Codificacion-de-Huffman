@@ -1,16 +1,19 @@
 #include <iostream>
-#include <cstring>
+
 char* encode(const char* str, unsigned int length, Symbol** symbols, unsigned int &lengthOutput){
-    symbols count = 0;
+    for(int i = 0; i < 255; i++){
+        symbols[i]::count = 0;
+    }
     for(int i = 0; i < length; i++){
-        if(symbols symbol == str[i]){
-            symbols count++;
+        for(int j = 0; j < 255; j++){
+            if(symbols[j]::symbol == str[i]){
+                symbols[i]::count++;
+            }
         }
     }
-    CodingTree* codingTree = createEncoding(symbols);
     lengthOutput = codingTree.count();
     char* result = new char[lengthOutput];
-    // aqui va el punto 6e
+    CodingTree* codingTree = createCode(symbols, result);
     return result;
 }
 void decode(const char* encoded, unsigned int length, Symbol** symbols, char* str){
@@ -20,14 +23,15 @@ void decode(const char* encoded, unsigned int length, Symbol** symbols, char* st
         str = str + codingTree.decode(encoded[read], read);
 }
 int main(){
-    Symbols symbols[255];
+    unsigned int compressedLength = 0;
+    Symbol* symbols[255];
     for(int i = 0; i < 255; i++){
-        symbols[i] symbol = i;
+        symbols[i]::symbol = i;
     }
     char t[] = "All the world's a stage, and all the men and women merely players.";
     char* code = encode(t,67,symbols, compressedLength);
     char* res = new char[66];
-    decode(code; outputLength, symbols, res);
+    decode(code, compressedLength, symbols, res);
     delete[] res;
     char c;
     std::cin >> c;
