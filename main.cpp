@@ -34,9 +34,8 @@ class CodingTree{
         }
     
     }
-            
+            int index=0;
             bool inOrder(BinaryNode* r, char c, char* code){
-                int index=0;
                 bool encode =false;
                 if (r != NULL) {
                     if (r->symbol ==c) {
@@ -110,7 +109,6 @@ public:
     char decode(const char* code,unsigned int &read){
         BinaryNode *temp;
         temp = root;
-        int contador=0;
         int count =sizeof(code)/sizeof(int);
         
         for (int i=0; i<count; i++) {
@@ -119,9 +117,8 @@ public:
             } else if (code [i] == 0){
                 temp = temp->left;
             }
-            contador++;
+            read++;
         }
-        read = contador;
         return temp->symbol;
     }
     
@@ -151,9 +148,10 @@ private:
             }
         }
     };
-    Nodo *cabeza, *ultimo;
-    unsigned int tamaño;
+    //Nodo *cabeza, *ultimo;
+    unsigned int tamano;
 public:
+    Nodo *cabeza, *ultimo;
     void ordenar(){
         Nodo *temp ;
         Nodo *temp2 ;
@@ -185,10 +183,10 @@ public:
     PriorityQueue(){
         cabeza= new Nodo();
         ultimo= cabeza;
-        tamaño=0;
+        tamano=0;
     }
-    unsigned int getTamaño(){
-        return tamaño;
+    unsigned int getTamano(){
+        return tamano;
     }
     PriorityQueue::Nodo pop(){
         Nodo *temp;
@@ -202,19 +200,19 @@ public:
         
         cabeza = cabeza->siguiente;
         //delete temp;
-        tamaño=tamaño-1;
+        tamano=tamano-1;
         
         return *temp;
             }
     void push (CodingTree::BinaryNode* b, int c){
         ultimo ->siguiente = new Nodo(b, c);
         ultimo = ultimo->siguiente;
-        tamaño++;
+        tamano++;
         ordenar();
     }
 };
 
-CodingTree* createCode(Symbol** symbols){
+CodingTree* createCode(Symbol** symbols, char* code){
     PriorityQueue cola = *new PriorityQueue();
     for (int i =0; i>256; i++) {
         if (symbols [i]->count !=0) {
@@ -226,12 +224,14 @@ CodingTree* createCode(Symbol** symbols){
     }
     }
     CodingTree* cd = new CodingTree();
-    int tamaño = cola.getTamaño();
+    int tamaño = cola.getTamano();
     for (int i=0; i< tamaño; i++) {
-        
+        cd->encode(code, cola.cabeza->binaryNode->symbol);
     }
+    return cd;
+}
         
-    }
+    
     
 
 
