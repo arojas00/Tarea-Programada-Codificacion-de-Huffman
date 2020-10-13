@@ -234,8 +234,9 @@ CodingTree* createCode(Symbol* symbols, char* code){
     int tempCount;
     PriorityQueue cola = *new PriorityQueue();
     for (int i =0; i<256; i++) {
-        std::cout<<symbols[i].count<< std::endl;
+        //std::cout<<symbols[i].count<< std::endl;
         if (symbols [i].count !=0) {
+            std::cout<<symbols[i].count<< std::endl;
          tempSymbol = symbols[i].symbol;
             std::cout<<symbols[i].symbol<< std::endl;
          tempCount = symbols[i].count;
@@ -246,10 +247,7 @@ CodingTree* createCode(Symbol* symbols, char* code){
     }
     
     CodingTree* cd = new CodingTree();
-//    int tamano = cola.getTamano();
-//    for (int i=0; i< tamano; i++) {
-//        cd->encode(code, cola.cabeza->binaryNode->symbol);
-//    }
+ 
     return cd;
 }
 
