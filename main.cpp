@@ -141,14 +141,14 @@ private:
         Nodo* siguiente;
         CodingTree::BinaryNode* binaryNode;
         ;
-        int count;
+        //int count;
         Nodo(){
             siguiente=0;
         }
-        Nodo(CodingTree::BinaryNode* dato, int count){
+        Nodo(CodingTree::BinaryNode* dato){
             this->binaryNode = dato;
             siguiente =0;
-            this -> count =count;
+            
         }
         ~Nodo(){
             if (siguiente != 0) {
@@ -171,15 +171,15 @@ public:
         while (temp->siguiente != NULL) {
             temp2 = temp -> siguiente;
             while (temp2 != NULL) {
-                if (temp->count >= temp2 ->count) {
+                if (temp->binaryNode->count >= temp2 ->binaryNode-> count) {
                     tempBinaryNode = temp->binaryNode;
-                    tempCount = temp -> count;
+                    tempCount = temp ->binaryNode-> count;
                     
                     temp->binaryNode = temp2->binaryNode;
-                    temp->count =temp2->count;
+                    temp->binaryNode-> count =temp2->binaryNode-> count;
                     
                     temp2 ->binaryNode =tempBinaryNode;
-                    temp2->count =tempCount;
+                    temp2->binaryNode->count =tempCount;
 
                 }
                 temp2 = temp2 -> siguiente;
@@ -204,15 +204,15 @@ public:
         
         temp = cabeza;
         tempBinaryNode = temp->binaryNode;
-        tempCount = temp->count;
+        tempCount = temp->binaryNode-> count;
         
         cabeza = cabeza->siguiente;
         tamano=tamano-1;
         
         return *temp;
             }
-    void push (CodingTree::BinaryNode* b, int c){
-        ultimo ->siguiente = new Nodo(b, c);
+    void push (CodingTree::BinaryNode* b){
+        ultimo ->siguiente = new Nodo(b);
         ultimo = ultimo->siguiente;
         tamano++;
         ordenar();
@@ -229,36 +229,42 @@ public:
     }
 };
 
-CodingTree* createCode(Symbol* symbols, char* code){
+CodingTree* createCode(Symbol* symbols){
     char tempSymbol;
     int tempCount;
     PriorityQueue cola = *new PriorityQueue();
-    for (int i =0; i<256; i++) {
-        std::cout<<symbols[i].count<< std::endl;
-        if (symbols [i].count !=0) {
-         tempSymbol = symbols[i].symbol;
-            std::cout<<symbols[i].symbol<< std::endl;
-         tempCount = symbols[i].count;
-        CodingTree::BinaryNode binaryNode = CodingTree::BinaryNode(tempSymbol, tempCount);
-        CodingTree::BinaryNode* ptrBinary =& binaryNode;
-        cola.push(ptrBinary, tempCount);
-    }
-    }
     
-    CodingTree* cd = new CodingTree();
-//    int tamano = cola.getTamano();
-//    for (int i=0; i< tamano; i++) {
-//        cd->encode(code, cola.cabeza->binaryNode->symbol);
-//    }
+    for (int i =0; i<256; i++) {
+        //std::cout<<symbols[i].count<< std::endl;
+        if (symbols [i].count !=0) {
+            //std::cout<<symbols[i].count<< std::endl;
+         tempSymbol = symbols[i].symbol;
+            //std::cout<<symbols[i].symbol<< std::endl;
+         tempCount = symbols[i].count;
+            CodingTree::BinaryNode *binaryNode = new CodingTree::BinaryNode(tempSymbol, tempCount);
+        //CodingTree::BinaryNode* ptrBinary =& binaryNode;
+            std::cout << "symbol " << binaryNode->symbol << " ";
+            std::cout << "count " << binaryNode->count << std::endl;
+        cola.push(binaryNode);
+    }
+    }
+    CodingTree *cd = new CodingTree();
+   int tamano = cola.getTamano();
+//    std::cout<<tamano;
+        for (int i=0; i< tamano; i++) {
+            cd->insert(cola.get(i)->symbol , cola.get(i)->count);
+            //cola.pop();
+        }
     return cd;
+
 }
 
 char* encode(const char* str, unsigned int length, Symbol* symbols, unsigned int &lengthOutput){
-    for(int i = 0; i < 255; i++){
+    for(int i = 0; i < 256; i++){
         symbols[i].count = 0;
     }
-    for(int i = 0; i < length; i++){
-        for(int j = 0; j < 255; j++){
+    for(int i = 0; i <= length; i++){
+        for(int j = 0; j < 256; j++){
             if(symbols[j].symbol == str[i]){
                 symbols[j].count++;
             }
@@ -267,7 +273,7 @@ char* encode(const char* str, unsigned int length, Symbol* symbols, unsigned int
     CodingTree* codingTree = new CodingTree();
     lengthOutput = codingTree->count();
     char* result = new char[lengthOutput];
-    codingTree = createCode(symbols, result);
+    codingTree = createCode(symbols);
     return result;
 }
 void decode(const char* encoded, unsigned int length, Symbol* symbols, char* str){
@@ -275,7 +281,7 @@ void decode(const char* encoded, unsigned int length, Symbol* symbols, char* str
     CodingTree* codingTree = new CodingTree();
     lengthOutput = codingTree->count();
     char* result = new char[lengthOutput];
-    codingTree = createCode(symbols, result);
+    codingTree = createCode(symbols);
     delete[] result;
     while(read < length){
         str = str + codingTree->decode(encoded, read);
@@ -284,10 +290,10 @@ void decode(const char* encoded, unsigned int length, Symbol* symbols, char* str
 int main(){
     
     unsigned int compressedLength = 0;
-    Symbol* symbols = new Symbol[255];
-    for(int i = 0; i <= 255; i++){
+    Symbol* symbols = new Symbol[256];
+    for(int i = 0; i < 256; i++){
         symbols[i].symbol = i;
-        //std::cout << i << symbols[i].symbol << std::endl;
+        std::cout << i << symbols[i].symbol << std::endl;
     }
     std::cout << "punto 1" << std::endl;
     char t[] = "All the world's a stage, and all the men and women merely players.";
