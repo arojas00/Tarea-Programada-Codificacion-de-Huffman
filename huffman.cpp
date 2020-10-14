@@ -19,6 +19,7 @@ class CodingTree{
             int count;
             int index;
             char symbol;
+            unsigned int suma;
             BinaryNode *left, *right;
             BinaryNode(char c, int p){
                 symbol =c;
@@ -38,43 +39,38 @@ class CodingTree{
             bool inOrder(BinaryNode* r, char c, char* code){
                 bool encode =false;
                 if (r == NULL) {
-                    std::cout << encode;
                     return encode;
-
                 }else{
-                    if (r->left) {
-                        code [index]= '0';
+                    if (r->left){
+                        code[index]= '0';
                         index++;
-                    }
                         inOrder(r ->left, c, code);
-
+                    }
                     if (r->symbol ==c) {
                         encode = true;
-                        std::cout << encode;
                         return encode;
                     }else{
                         index = index-1;
                         if (r->right) {
                             code[index] = '1';
                             index++;
+                            inOrder(r->right, c, code);
                         }
-                        inOrder(r->right, c, code);
                     }
                 }
-                std::cout << encode;
                 return encode;
             }
             
             unsigned int countMethod(BinaryNode* r){
-                unsigned int suma=0;
                 if (r!= NULL) {
-                    while (r->left || r->right) {
+                    //if(r->left || r->right) {
                         suma =suma + r->count;
+                        //std::cout << r->count << std::endl;
                         countMethod(r->left);
                         countMethod(r->right);
-                    }
+                    //}
                 }
-                return suma;
+                return suma*2;
             }
         };
     BinaryNode *root;
@@ -115,17 +111,18 @@ public:
         bool encode= (root->inOrder(root, c, code));
         return encode;
     }
-    
+    int index;
     char decode(const char* code,unsigned int &read){
         BinaryNode *temp;
         temp = root;
-        int count =sizeof(code)/sizeof(int);
         
-        for (int i=0; i<count; i++) {
-            if (code[i] == 1) {
+        while (temp->left != NULL || temp->right != NULL) {
+            if (code[index] == 1 && temp->right) {
                 temp = temp->right;
-            } else if (code [i] == 0){
+                index++;
+            } else if (code [index] == 0 && temp->left){
                 temp = temp->left;
+                index++;
             }
             read++;
         }
@@ -273,13 +270,18 @@ char* encode(const char* str, unsigned int length, Symbol* symbols, unsigned int
     }
     CodingTree* codingTree = new CodingTree();
     codingTree = createCode(symbols);
-    //lengthOutput = codingTree->count();
+    lengthOutput = codingTree->count();
     //std::cout << codingTree->count() << std::endl;
-    lengthOutput = 21;
+    char* code = new char[10];
     char* result = new char[lengthOutput];
+    int index = 0;
     for(int i = 0; i < length; i++){
-        codingTree->encode(result, str[i]);
-        std::cout  << str[i] << std::endl;
+        codingTree->encode(code, str[i]);
+        std::cout << i << code << std::endl;
+        for(int j = 0; j < 2; j++){
+            result[index] = code[j];
+            index++;
+        }
     }
     return result;
 }
@@ -288,7 +290,7 @@ void decode(const char* encoded, unsigned int length, Symbol* symbols, char* str
     CodingTree* codingTree = new CodingTree();
     codingTree = createCode(symbols);
     while(read < length){
-        str = str + codingTree->decode(encoded, read);
+        str[read] = codingTree->decode(encoded, read);
     }
 }
 
@@ -303,11 +305,13 @@ int main(){
     char t[] = "All the world's a stage, and all the men and women merely players.";
     std::cout << "punto 2" << std::endl;
     char* code = encode(t, 67, symbols, compressedLength);
+    char b[] = "1011100100101100010001110111101001110010000001011110101011000111011101100001001011101011110111011001101110100011110110111001001011000100011101111011111011100011011101000111101101001110010111110111000110111110110000011010101001100011001011101010001100000001101101101010";
     std::cout << std::endl << code << std::endl;
     char* res = new char[67];
     std::cout << "punto 3" << std::endl;
-    //decode(code, compressedLength, symbols, res);
+    decode(b, compressedLength, symbols, res);
     std::cout << res << std::endl;
+    //std::cout << t << std::endl;
     delete[] res;
     std::cout << "punto final" << std::endl;
     char c;
