@@ -17,6 +17,7 @@ class CodingTree{
         class BinaryNode{
             public:
             int count;
+            int index;
             char symbol;
             BinaryNode *left, *right;
             BinaryNode(char c, int p){
@@ -30,38 +31,39 @@ class CodingTree{
                     delete left;
                 }
                 if (right) {
-                delete right;
-        }
+                    delete right;
+                }
     
-    }
-            int index;
+            }
             bool inOrder(BinaryNode* r, char c, char* code){
-                //std::cout << index << std::endl;
-                            bool encode =false;
-                            if (r == NULL) {
-                                return encode;
+                bool encode =false;
+                if (r == NULL) {
+                    std::cout << encode;
+                    return encode;
 
-                            }else{
-                                if (r->left) {
-                                    code [index]= '0';
-                                    index++;
-                                }
-                                    inOrder(r ->left, c, code);
+                }else{
+                    if (r->left) {
+                        code [index]= '0';
+                        index++;
+                    }
+                        inOrder(r ->left, c, code);
 
-                                if (r->symbol ==c) {
-                                    encode = true;
-                                    return encode;
-                                }else{
-                                    index = index-1;
-                                    if (r->right) {
-                                        code[index] = '1';
-                                        index++;
-                                    }
-                                    inOrder(r->right, c, code);
-                                }
-                            }
-                            return encode;
-                            }
+                    if (r->symbol ==c) {
+                        encode = true;
+                        std::cout << encode;
+                        return encode;
+                    }else{
+                        index = index-1;
+                        if (r->right) {
+                            code[index] = '1';
+                            index++;
+                        }
+                        inOrder(r->right, c, code);
+                    }
+                }
+                std::cout << encode;
+                return encode;
+            }
             
             unsigned int countMethod(BinaryNode* r){
                 unsigned int suma=0;
@@ -110,7 +112,7 @@ public:
     }
     
     bool encode(char* code, char c){
-      bool encode= (root->inOrder(root, c, code));
+        bool encode= (root->inOrder(root, c, code));
         return encode;
     }
     
@@ -233,28 +235,27 @@ CodingTree* createCode(Symbol* symbols){
     char tempSymbol;
     int tempCount;
     PriorityQueue cola = *new PriorityQueue();
-    
     for (int i =0; i<256; i++) {
         //std::cout<<symbols[i].count<< std::endl;
         if (symbols [i].count !=0) {
             //std::cout<<symbols[i].count<< std::endl;
-         tempSymbol = symbols[i].symbol;
+            tempSymbol = symbols[i].symbol;
             //std::cout<<symbols[i].symbol<< std::endl;
-         tempCount = symbols[i].count;
+            tempCount = symbols[i].count;
             CodingTree::BinaryNode *binaryNode = new CodingTree::BinaryNode(tempSymbol, tempCount);
-        //CodingTree::BinaryNode* ptrBinary =& binaryNode;
+            //CodingTree::BinaryNode* ptrBinary =& binaryNode;
             //std::cout << "symbol " << binaryNode->symbol << " ";
             //std::cout << "count " << binaryNode->count << std::endl;
-        cola.push(binaryNode,binaryNode->count);
-    }
+            cola.push(binaryNode,binaryNode->count);
+        }
     }
     CodingTree *cd = new CodingTree();
-   int tamano = cola.getTamano();
-//    std::cout<<tamano;
-        for (int i=0; i< tamano; i++) {
-            cd->insert(cola.get(i)->symbol , cola.get(i)->count);
-            //cola.pop();
-        }
+    int tamano = cola.getTamano();
+    //std::cout<<tamano;
+    for (int i=0; i< tamano; i++) {
+        cd->insert(cola.get(i)->symbol , cola.get(i)->count);
+        //cola.pop();
+    }
     return cd;
 
 }
@@ -277,8 +278,8 @@ char* encode(const char* str, unsigned int length, Symbol* symbols, unsigned int
     lengthOutput = 21;
     char* result = new char[lengthOutput];
     for(int i = 0; i < length; i++){
-        //std::cout << i << str[i] << std::endl;
         codingTree->encode(result, str[i]);
+        std::cout  << str[i] << std::endl;
     }
     return result;
 }
@@ -302,7 +303,7 @@ int main(){
     char t[] = "All the world's a stage, and all the men and women merely players.";
     std::cout << "punto 2" << std::endl;
     char* code = encode(t, 67, symbols, compressedLength);
-    std::cout << code << std::endl;
+    std::cout << std::endl << code << std::endl;
     char* res = new char[67];
     std::cout << "punto 3" << std::endl;
     //decode(code, compressedLength, symbols, res);
